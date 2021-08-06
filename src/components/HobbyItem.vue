@@ -1,6 +1,6 @@
 <template>
   <div v-bind:style="{ background: hobby.color }" class="hobbyItem">
-    <p>{{ hobby.name }}</p>
+    <p>{{ hobby.title.slice(0, 10) }}</p>
     <button @click="deleteHobby">Delete</button>
   </div>
 </template>

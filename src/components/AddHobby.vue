@@ -1,5 +1,5 @@
 <template>
-  <form @submit="addHobby">
+  <form @submit.prevent="addHobby">
     <input
       type="text"
       placeholder="More hobby...?"
@@ -12,7 +12,6 @@
 
 <script>
 import { ref } from '@vue/reactivity'
-import { v4 as uuid } from 'uuid'
 import makeColor from '../helpers/index'
 
 export default {
@@ -20,12 +19,11 @@ export default {
   setup(props, context) {
     const item = ref('')
 
-    const addHobby = event => {
-      event.preventDefault()
+    const addHobby = () => {
+      // event.preventDefault()
 
       const newHobby = {
-        id: uuid(),
-        name: item.value,
+        title: item.value,
         color: makeColor()
       }
 

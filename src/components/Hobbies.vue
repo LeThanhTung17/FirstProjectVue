@@ -17,27 +17,55 @@
 
 <script>
 import { ref } from '@vue/reactivity'
-import { v4 as uuid } from 'uuid'
 import HobbyItem from './HobbyItem'
 import AddHobby from './AddHobby'
 import makeColor from '../helpers/index'
+import axios from 'axios'
 
 export default {
   name: 'Hobbies',
   components: { HobbyItem, AddHobby },
   setup() {
-    const hobbies = ref([
-      { id: uuid(), name: 'Gym', color: makeColor() },
-      { id: uuid(), name: 'Football', color: makeColor() },
-      { id: uuid(), name: 'Reading Books', color: makeColor() }
-    ])
+    const hobbies = ref([])
 
-    const addHobby = hobby => {
-      hobbies.value.push(hobby)
+    const getAllItem = async () => {
+      try {
+        const res = await axios.get(
+          'https://jsonplaceholder.typicode.com/todos?_limit=5'
+        )
+        console.log(res.data)
+        hobbies.value = res.data.map(el => {
+          return {
+            ...el,
+            color: makeColor()
+          }
+        })
+      } catch (error) {
+        console.log(error)
+      }
     }
 
-    const deleteHobby = id => {
-      hobbies.value = hobbies.value.filter(hobby => hobby.id !== id)
+    getAllItem()
+
+    const addHobby = async hobby => {
+      try {
+        const res = await axios.post(
+          'https://jsonplaceholder.typicode.com/todos',
+          hobby
+        )
+        hobbies.value.push(res.data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    const deleteHobby = async id => {
+      try {
+        await axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`)
+        hobbies.value = hobbies.value.filter(hobby => hobby.id !== id)
+      } catch (error) {
+        console.log(error)
+      }
     }
 
     return {
